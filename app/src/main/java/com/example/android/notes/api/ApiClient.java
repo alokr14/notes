@@ -1,5 +1,6 @@
 package com.example.android.notes.api;
 
+import com.example.android.notes.models.Auth;
 import com.example.android.notes.models.User;
 import com.example.android.notes.models.Result;
 
@@ -17,7 +18,10 @@ import retrofit2.http.POST;
         Call<User> createUser(@Body User user);
 
         @POST("auth/login/")
-        Call<Result> createUser(@Body Result result);
+        Call<Auth> createUser(@Body Result result);
+
+        @GET("user/classroom/")
+        Call<ResponseBody> getAuth(@Header("Authorization") String authToken);
 
     }
 

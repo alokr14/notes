@@ -45,7 +45,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
     private void userSignUp(){
 
         final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Signing Up...");
+        progressDialog.setMessage("Signing Up....");
         progressDialog.show();
 
         ApiClient service = HttpService.getClient().create(ApiClient.class);
@@ -65,11 +65,10 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse( Call<User> call, Response<User> userResponse) {
-                //hiding progress dialog
                 progressDialog.dismiss();
 
                 userResponse.code();
-                //displaying the message from the response as toast
+
                 Toast.makeText(getApplicationContext(), "successful", Toast.LENGTH_LONG).show();
             }
 
