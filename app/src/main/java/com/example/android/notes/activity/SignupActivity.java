@@ -23,7 +23,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 
     private Button buttonSignUp;
     private TextView logintext;
-    private EditText editTextName, editTextEmail, editTextPassword, editTextFirstName, editTextLastName;
+    private EditText editTextName, editTextEmail, editTextPassword,editTextCPassword;
 
 
     @Override
@@ -31,14 +31,15 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
+        logintext = (TextView) findViewById(R.id.logintext);
         buttonSignUp = (Button) findViewById(R.id.buttonRegister);
 
         editTextName = (EditText) findViewById(R.id.editTextUsername);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-        editTextFirstName = (EditText) findViewById(R.id.editTextFirstName);
-        editTextLastName = (EditText) findViewById(R.id.editTextLastName);
-        logintext = (TextView) findViewById(R.id.logintext);
+        editTextCPassword = (EditText) findViewById(R.id.editTextCPassword);
+
+        logintext.setOnClickListener(this);
         buttonSignUp.setOnClickListener(this);
     }
 
@@ -52,11 +53,10 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 
         User user = new User();
 
-        user.setUsername( editTextName.getText().toString().trim());
+        user.setName( editTextName.getText().toString().trim());
         user.setPassword( editTextPassword.getText().toString().trim());
         user.setEmail(editTextEmail.getText().toString().trim());
-        user.setFirst_name(editTextFirstName.getText().toString().trim());;
-        user.setLast_name(editTextLastName.getText().toString().trim());
+        user.setCPassword(editTextCPassword.getText().toString().trim());
 
         Call<User> call = service.createUser(user);
 

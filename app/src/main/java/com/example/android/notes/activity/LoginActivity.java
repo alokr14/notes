@@ -23,8 +23,9 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Button buttonLogIn;
-    private EditText userName,password;
+    private EditText email,password;
     private static String token;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         buttonLogIn = (Button) findViewById(R.id.buttonLogin);
-        userName = (EditText) findViewById(R.id.editTextUsernameLogin);
+        email = (EditText) findViewById(R.id.editTextEmailLogin);
         password = (EditText) findViewById(R.id.editTextPasswordLogin);
         buttonLogIn.setOnClickListener(this);
     }
@@ -46,61 +47,61 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         ApiClient service = HttpService.getClient().create(ApiClient.class);
 
         Result result = new Result();
-        result.setUsername( userName.getText().toString().trim());
+        result.setEmail( email.getText().toString().trim());
         result.setPassword( password.getText().toString().trim());
 
-        Call<Auth> call = service.createUser(result);
+        Call<Result> call = service.createUser(result);
 
 
 
-        call.enqueue(new Callback<Auth>() {
+        call.enqueue(new Callback<Result>() {
             @Override
-            public void onResponse( Call<Auth> call, Response<Auth> userResponse) {
+            public void onResponse( Call<Result> call, Response<Result> userResponse) {
                 progressDialog.dismiss();
 
                 if(userResponse.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), userResponse.body().getToken(), Toast.LENGTH_LONG).show();
-                    token = userResponse.body().getToken();
-                    Log.e("value",token);
-                    getAuth();
+                    Toast.makeText(getApplicationContext(), "successfull", Toast.LENGTH_LONG).show();
+//                    token = userResponse.body().getToken();
+                    //Log.e("value",token);
+//                    getAuth();
                 }
                 else{
-                    Toast.makeText(getApplicationContext(), "login failed", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "failed", Toast.LENGTH_LONG).show();
                 }
             }
             @Override
-            public void onFailure( Call<Auth> call, Throwable t) {
+            public void onFailure( Call<Result> call, Throwable t) {
                 progressDialog.dismiss();
-                Toast.makeText(getApplicationContext(), "error", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 
     }
 
-    public void getAuth(){
-
-        ApiClient service = HttpService.getClient().create(ApiClient.class);
-
-        Call<ResponseBody> call = service.getAuth("JWT " +token);
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()){
-                    Toast.makeText(getApplicationContext(), "authentication successfull", Toast.LENGTH_LONG).show();
-                }
-                else{
-                    Toast.makeText(getApplicationContext(), "token is not correct", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                Toast.makeText(getApplicationContext(), "error", Toast.LENGTH_LONG).show();
-            }
-        });
-    }
+//    public void getAuth(){
+//
+//        ApiClient service = HttpService.getClient().create(ApiClient.class);
+//
+//        Call<ResponseBody> call = service.getAuth("JWT " +token);
+//
+//        call.enqueue(new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                if (response.isSuccessful()){
+//                    Toast.makeText(getApplicationContext(), "authentication successfull", Toast.LENGTH_LONG).show();
+//                }
+//                else{
+//                    Toast.makeText(getApplicationContext(), "token is not correct", Toast.LENGTH_LONG).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ResponseBody> call, Throwable t) {
+//
+//                Toast.makeText(getApplicationContext(), "error", Toast.LENGTH_LONG).show();
+//            }
+//        });
+//    }
 
 
     @Override
