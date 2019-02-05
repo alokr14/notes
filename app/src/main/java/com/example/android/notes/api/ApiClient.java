@@ -27,7 +27,14 @@ public interface ApiClient {
         @GET("user/classroom/")
         Call<ResponseBody> getAuth(@Header("Authorization") String authToken);
 
+//        @GET("api/post/create")
+//        Call<User> createPost(@Body User user);
 
+//        @GET("api/post")
+//        Call<User> showPost(@Body User user);
+
+//        @GET("api/details")
+//        Call<User> details(@Body User user);
 
         String BASE_URL = "ENTER BASE URL FOR FILE UPLOAD";
 
