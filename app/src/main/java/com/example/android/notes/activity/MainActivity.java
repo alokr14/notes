@@ -138,8 +138,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_profile) {
+            Intent intent=new Intent(MainActivity.this,UserProfile.class);
+            startActivity(intent);
             // Handle the camera action
         } else if (id == R.id.nav_logout) {
+            Intent intent=new Intent(MainActivity.this,LoginActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_folder) {
 

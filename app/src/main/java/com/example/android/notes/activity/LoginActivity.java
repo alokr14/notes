@@ -1,6 +1,7 @@
 package com.example.android.notes.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -61,8 +62,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 if(userResponse.isSuccessful()) {
                     Toast.makeText(getApplicationContext(), "successfull", Toast.LENGTH_LONG).show();
-//                    token = userResponse.body().getToken();
-                    //Log.e("value",token);
+                  token = userResponse.body().getToken();
+//                    Log.e("value",token);
+
+                    Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+                    startActivity(intent);
 //                    getAuth();
                 }
                 else{
@@ -76,6 +80,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
+    }
+    public static String get_Token() {
+        return token;
     }
 
 //    public void getAuth(){
