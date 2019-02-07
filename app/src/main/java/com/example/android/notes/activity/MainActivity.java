@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return;
         }
 
+
         //adding click listener to button
         findViewById(R.id.fab_attach).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +104,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //opening file chooser
                 Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i, 100);
+            }
+        });
+
+        //adding click listener to button
+        findViewById(R.id.fab_camera).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //opening file chooser
+                Intent i = new Intent("android.media.action.IMAGE_CAPTURE");
+                startActivity(i);
             }
         });
 
