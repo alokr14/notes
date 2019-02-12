@@ -1,5 +1,6 @@
 package com.example.android.notes.api;
 
+import com.example.android.notes.beans.PostList;
 import com.example.android.notes.models.Auth;
 import com.example.android.notes.models.MyResponse;
 import com.example.android.notes.models.Profile;
@@ -7,6 +8,7 @@ import com.example.android.notes.models.User;
 import com.example.android.notes.models.Result;
 
 
+import java.util.List;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -28,7 +30,7 @@ public interface ApiClient {
         Call<Result> createUser(@Body Result result);
 
 
-        @GET("api/details")
+        @POST("api/details")
         Call<Profile> viewProfile(@Header("Authorization") String authToken);
 
 
@@ -41,15 +43,13 @@ public interface ApiClient {
 //        @GET("api/post")
 //        Call<User> showPost(@Body User user);
 
+        @GET("api/showall")
+        Call<PostList> getMyJSON();
 
 
-        String BASE_URL = "ENTER BASE URL FOR FILE UPLOAD";
-
-        //this is our multipart request
-        //we have two parameters on is name and other one is description
         @Multipart
-        @POST("REMAINING PART OF URL")
-        Call<MyResponse> uploadImage(@Part("image\"; filename=\"myfile.jpg\" ") RequestBody file, @Part("desc") RequestBody desc);
+        @POST("api/store")
+        Call<MyResponse> uploadImage(@Part("file\"; filename=\"myfile.jpg\" ") RequestBody file, @Part("desc") RequestBody desc);
 
     }
 

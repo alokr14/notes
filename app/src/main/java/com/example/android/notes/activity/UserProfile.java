@@ -45,7 +45,7 @@ public class UserProfile  extends AppCompatActivity {
 
 
             ApiClient service = HttpService.getClient().create(ApiClient.class);
-            Call<Profile> call = service.viewProfile("JWT " +LoginActivity.get_Token());
+            Call<Profile> call = service.viewProfile("JWT " +LoginActivity.token);
 
             mContext = getApplicationContext();
 
@@ -56,8 +56,6 @@ public class UserProfile  extends AppCompatActivity {
 
                     if(userResponse.isSuccessful()) {
                         Toast.makeText(getApplicationContext(), "success1", Toast.LENGTH_LONG).show();
-                        //    SharedPreference.getInstance(getApplicationContext()).;
-                        // startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                         String user_name = userResponse.body().getName();
                         userName.setText("Name: " +user_name);
                         String user_email = userResponse.body().getEmail();

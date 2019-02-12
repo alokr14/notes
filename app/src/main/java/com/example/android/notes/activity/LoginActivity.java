@@ -25,7 +25,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private Button buttonLogIn;
     private EditText email,password;
-    private static String token;
+    public static String token;
 
 
     @Override
@@ -117,5 +117,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             userLogIn();
         }
 
+    }
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
     }
 }

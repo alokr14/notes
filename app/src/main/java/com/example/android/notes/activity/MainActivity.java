@@ -1,6 +1,7 @@
 package com.example.android.notes.activity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -17,6 +18,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,12 +30,17 @@ import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.example.android.notes.R;
+import com.example.android.notes.adapter.PostAdapter;
 import com.example.android.notes.api.ApiClient;
+import com.example.android.notes.beans.Post;
+import com.example.android.notes.beans.PostList;
+import com.example.android.notes.httpHandler.HttpService;
 import com.example.android.notes.models.MyResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -41,7 +50,14 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.app.Activity.RESULT_OK;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private ArrayList<Post> postList;
+    private ProgressDialog pDialog;
+    private RecyclerView recyclerView;
+    private PostAdapter eAdapter;
 
     FloatingActionButton fab_plus, fab_camera, fab_attach;
     Animation FabOpen, FabClose, FabRclockwise, FabRanticlockwise;
@@ -121,13 +137,56 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
-        toggle.setDrawerIndicatorEnabled(false);  //disable the old default icon
-        toggle.setHomeAsUpIndicator(R.drawable.ic_action_attach); //enable new icon for drawer..
+//        toggle.setDrawerIndicatorEnabled(false);  //disable the old default icon
+//        toggle.setHomeAsUpIndicator(R.drawable.ic_action_attach); //enable new icon for drawer.
         toggle.syncState();
 
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        pDialog = new ProgressDialog(MainActivity.this);
+        pDialog.setMessage("Loading Data.. Please wait...");
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+        //Creating an object of our api interface
+        ApiClient api = HttpService.getClient().create(ApiClient.class);
+
+        /**
+         * Calling JSON
+         */
+        Call<PostList> call = api.getMyJSON();
+
+        /**
+         * Enqueue Callback will be call when get response...
+         */
+        call.enqueue(new Callback<PostList>() {
+            @Override
+            public void onResponse(Call<PostList> call, Response<PostList> response) {
+                //Dismiss Dialog
+                pDialog.dismiss();
+
+                if (response.isSuccessful()) {
+                    /**
+                     * Got Successfully
+                     */
+                    postList = response.body().getPost();
+                    recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+                    eAdapter = new PostAdapter(postList);
+                    RecyclerView.LayoutManager eLayoutManager = new LinearLayoutManager(getApplicationContext());
+                    recyclerView.setLayoutManager(eLayoutManager);
+                    recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    recyclerView.setAdapter(eAdapter);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostList> call, Throwable t) {
+                pDialog.dismiss();
+            }
+        });
     }
 
 
@@ -187,20 +246,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         RequestBody requestFile = RequestBody.create(MediaType.parse(getContentResolver().getType(fileUri)), file);
         RequestBody descBody = RequestBody.create(MediaType.parse("text/plain"), desc);
 
-        //The gson builder
-        Gson gson = new GsonBuilder()
-                .setLenient()
-                .create();
-
-
-        //creating retrofit object
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(ApiClient.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
         //creating our api
-        ApiClient api = retrofit.create(ApiClient.class);
+        ApiClient api = HttpService.getClient().create(ApiClient.class);
 
         //creating a call and calling the upload image method
         Call<MyResponse> call = api.uploadImage(requestFile, descBody);

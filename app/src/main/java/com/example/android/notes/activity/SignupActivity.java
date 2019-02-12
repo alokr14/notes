@@ -70,6 +70,8 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                 userResponse.code();
 
                 Toast.makeText(getApplicationContext(), "successful", Toast.LENGTH_LONG).show();
+                Intent intent=new Intent(SignupActivity.this,LoginActivity.class);
+                startActivity(intent);
             }
 
             @Override
@@ -92,5 +94,9 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
             Intent intent=new Intent(SignupActivity.this,LoginActivity.class);
             startActivity(intent);
         }
+    }
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
     }
 }
