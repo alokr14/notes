@@ -13,11 +13,11 @@ import java.util.List;
 
 
 
-public class PostAdapter extends RecyclerView.Adapter<PostAdapter.CustomViewHolder> {
+public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.CustomViewHolder> {
     private List<Post> posts;
 
-    public PostAdapter(List<Post> post) {
-        this.posts = post;
+    public PostsAdapter(List<Post> posts) {
+        this.posts = posts;
     }
 
     @Override
@@ -31,11 +31,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.CustomViewHold
     @Override
     public void onBindViewHolder(CustomViewHolder holder, int position) {
         Post post = posts.get(position);
-        holder.id.setText(post.getId());
-        holder.name.setText(post.getName());
-        holder.size.setText(post.getSize());
-        holder.created_at.setText(post.getCreated_at());
-        holder.updated_at.setText(post.getUpdated_at());
+        holder.employeeName.setText(post.getName());
+        holder.email.setText(post.getEmail());
+        holder.designation.setText(post.getDesignation());
+        holder.dob.setText(post.getDob());
+        holder.contactNumber.setText(post.getContactNumber());
     }
 
     @Override
@@ -44,15 +44,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.CustomViewHold
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
-        public TextView id, name, size,created_at,updated_at;
+        public TextView employeeName, designation, email, salary, dob,contactNumber;
 
         public CustomViewHolder(View view) {
             super(view);
-            id = (TextView) view.findViewById(R.id.fileId);
-            name = (TextView) view.findViewById(R.id.fileName);
-            size = (TextView) view.findViewById(R.id.fileSize);
-            created_at = (TextView) view.findViewById(R.id.created_at);
-            updated_at = (TextView) view.findViewById(R.id.updated_at);
+            employeeName = (TextView) view.findViewById(R.id.fileName);
+            email = (TextView) view.findViewById(R.id.fileId);
+            designation = (TextView) view.findViewById(R.id.created_at);
+            dob = (TextView) view.findViewById(R.id.fileSize);
+            contactNumber = (TextView) view.findViewById(R.id.updated_at);
         }
     }
 }

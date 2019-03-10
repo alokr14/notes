@@ -1,5 +1,6 @@
 package com.example.android.notes.api;
 
+import com.example.android.notes.beans.Post;
 import com.example.android.notes.beans.PostList;
 import com.example.android.notes.models.Auth;
 import com.example.android.notes.models.MyResponse;
@@ -8,6 +9,7 @@ import com.example.android.notes.models.User;
 import com.example.android.notes.models.Result;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.RequestBody;
@@ -30,7 +32,7 @@ public interface ApiClient {
         Call<Result> createUser(@Body Result result);
 
 
-        @POST("api/details")
+        @GET("api/details")
         Call<Profile> viewProfile(@Header("Authorization") String authToken);
 
 
@@ -43,12 +45,13 @@ public interface ApiClient {
 //        @GET("api/post")
 //        Call<User> showPost(@Body User user);
 
-        @GET("api/showall")
+
+        @GET("api/showall/1")
         Call<PostList> getMyJSON();
 
 
         @Multipart
-        @POST("api/store")
+        @POST("api/store/1")
         Call<MyResponse> uploadImage(@Part("file\"; filename=\"myfile.jpg\" ") RequestBody file, @Part("desc") RequestBody desc);
 
     }

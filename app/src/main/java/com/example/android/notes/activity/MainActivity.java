@@ -30,7 +30,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.example.android.notes.R;
-import com.example.android.notes.adapter.PostAdapter;
+import com.example.android.notes.adapter.PostsAdapter;
 import com.example.android.notes.api.ApiClient;
 import com.example.android.notes.beans.Post;
 import com.example.android.notes.beans.PostList;
@@ -57,9 +57,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ArrayList<Post> postList;
     private ProgressDialog pDialog;
     private RecyclerView recyclerView;
-    private PostAdapter eAdapter;
+    private PostsAdapter eAdapter;
 
-    FloatingActionButton fab_plus, fab_camera, fab_attach;
+    FloatingActionButton fab_plus, fab_camera, fab_attach, fab_input_text;
     Animation FabOpen, FabClose, FabRclockwise, FabRanticlockwise;
     boolean isOpen = false;
 
@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab_plus = (FloatingActionButton) findViewById(R.id.fab_plus);
         fab_camera = (FloatingActionButton) findViewById(R.id.fab_camera);
         fab_attach = (FloatingActionButton) findViewById(R.id.fab_attach);
+        fab_input_text = (FloatingActionButton) findViewById(R.id.fab_input_text);
         FabOpen = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         FabClose = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
         FabRclockwise = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_clockwise);
@@ -85,17 +86,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (isOpen) {
                     fab_attach.startAnimation(FabClose);
                     fab_camera.startAnimation(FabClose);
+                    fab_input_text.startAnimation(FabClose);
                     fab_plus.startAnimation(FabRanticlockwise);
                     fab_camera.setClickable(false);
                     fab_attach.setClickable(false);
+                    fab_input_text.setClickable(false);
                     isOpen = false;
 
                 } else {
                     fab_attach.startAnimation(FabOpen);
                     fab_camera.startAnimation(FabOpen);
+                    fab_input_text.startAnimation(FabOpen);
                     fab_plus.startAnimation(FabRclockwise);
                     fab_camera.setClickable(true);
                     fab_attach.setClickable(true);
+                    fab_input_text.setClickable(true);
                     isOpen = true;
                 }
             }
@@ -123,12 +128,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        //adding click listener to button
         findViewById(R.id.fab_camera).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //opening file chooser
                 Intent i = new Intent("android.media.action.IMAGE_CAPTURE");
+                startActivity(i);
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, 100);
+            }
+        });
+
+        findViewById(R.id.fab_input_text).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this,InputText.class);
                 startActivity(i);
             }
         });
@@ -174,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                      */
                     postList = response.body().getPost();
                     recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-                    eAdapter = new PostAdapter(postList);
+                    eAdapter = new PostsAdapter(postList);
                     RecyclerView.LayoutManager eLayoutManager = new LinearLayoutManager(getApplicationContext());
                     recyclerView.setLayoutManager(eLayoutManager);
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -239,6 +252,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void uploadFile(Uri fileUri, String desc) {
 
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Uploading File...");
+        progressDialog.show();
+
         //creating a file
         File file = new File(getRealPathFromURI(fileUri));
 
@@ -249,15 +266,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //creating our api
         ApiClient api = HttpService.getClient().create(ApiClient.class);
 
-        //creating a call and calling the upload image method
+        //creating a call and calling the upload file method
         Call<MyResponse> call = api.uploadImage(requestFile, descBody);
 
         //finally performing the call
         call.enqueue(new Callback<MyResponse>() {
             @Override
             public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                progressDialog.dismiss();
                 if (!response.body().error) {
-                    Toast.makeText(getApplicationContext(), "File Uploaded Successfully...", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(), "File Uploaded Successfully...", Toast.LENGTH_LONG).show();
+                    Intent intent=new Intent(MainActivity.this,MainActivity.class);
+                    startActivity(intent);
                 } else {
                     Toast.makeText(getApplicationContext(), "Some error occurred...", Toast.LENGTH_LONG).show();
                 }

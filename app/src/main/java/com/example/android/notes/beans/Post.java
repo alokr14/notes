@@ -7,26 +7,30 @@ import com.google.gson.annotations.SerializedName;
 public class Post {
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private Integer employeeId;
     @SerializedName("name")
     @Expose
     private String name;
     @SerializedName("size")
     @Expose
-    private String size;
+    private String dob;
+    @SerializedName("user_id")
+    @Expose
+    private String designation;
     @SerializedName("created_at")
     @Expose
-    private String created_at;
+    private String contactNumber;
     @SerializedName("updated_at")
     @Expose
-    private String updated_at;
+    private String email;
 
-    public Integer getId() {
-        return id;
+
+    public Integer getEmployeeId() {
+        return employeeId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setEmployeeId(Integer employeeId) {
+        this.employeeId = employeeId;
     }
 
     public String getName() {
@@ -37,29 +41,36 @@ public class Post {
         this.name = name;
     }
 
-    public String getSize() {
-        return size;
+    public String getDob() {
+        return dob;
     }
 
-    public void setSize(String size) {
-        this.size = size;
+    public void setDob(String dob) {
+        this.dob = dob;
     }
 
-    public String getCreated_at() {
-        return created_at;
+    public String getDesignation() {
+        return designation;
     }
 
-    public void setCreated_at(String created_at) {
-        this.created_at = created_at;
+    public void setDesignation(String designation) {
+        this.designation = designation;
     }
 
-    public String getUpdated_at() {
-        return updated_at;
+    public String getContactNumber() {
+        return contactNumber;
     }
 
-    public void setUpdated_at(String updated_at) {
-        this.updated_at = updated_at;
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
 }
